@@ -1,4 +1,4 @@
-package com.metacore.demo;
+package com.metacore.address;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

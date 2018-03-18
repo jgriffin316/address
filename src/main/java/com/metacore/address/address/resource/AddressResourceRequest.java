@@ -1,4 +1,4 @@
-package com.metacore.demo.controller.resource;
+package com.metacore.address.address.resource;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

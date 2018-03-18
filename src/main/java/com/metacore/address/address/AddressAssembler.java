@@ -1,10 +1,9 @@
-package com.metacore.demo.controller;
+package com.metacore.address.address;
 
 import org.springframework.stereotype.Component;
 
-import com.metacore.demo.controller.resource.AddressResourceRequest;
-import com.metacore.demo.controller.resource.AddressResourceResponse;
-import com.metacore.demo.domain.Address;
+import com.metacore.address.address.resource.AddressResourceRequest;
+import com.metacore.address.address.resource.AddressResourceResponse;
 
 @Component
 public class AddressAssembler {

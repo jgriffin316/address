@@ -1,4 +1,4 @@
-package com.metacore.demo.domain;
+package com.metacore.address.address;
 
 import java.sql.Date;
 

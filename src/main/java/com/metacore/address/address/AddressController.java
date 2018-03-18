@@ -1,4 +1,4 @@
-package com.metacore.demo.controller;
+package com.metacore.address.address;
 
 import javax.validation.Valid;
 
@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.metacore.demo.controller.resource.AddressResourceRequest;
-import com.metacore.demo.controller.resource.AddressResourceResponse;
-import com.metacore.demo.domain.Address;
-import com.metacore.demo.service.AddressService;
+import com.metacore.address.address.resource.AddressResourceRequest;
+import com.metacore.address.address.resource.AddressResourceResponse;
 
 @RestController
 @RequestMapping("/v1/address")
