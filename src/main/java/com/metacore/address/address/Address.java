@@ -1,87 +1,96 @@
 package com.metacore.address.address;
 
-import java.sql.Date;
+import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.EntityListeners;
 import javax.persistence.Id;
 
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @EntityListeners(AuditingEntityListener.class)
 @Entity
 public class Address {
-	@Id
-	private String id;
-	
-	private String number;
-	private String unit;
-	private String street;
-	private String city;
-	private String state;
-	private String country;
-	
-	@CreatedDate
-	private Date createdDate;
-	
-	@LastModifiedDate
-	private Date lastModifiedDate;
+  @Id
+  private String id;
 
-	public String getId() {
-		return id;
-	}
+  private String number;
+  private String unit;
+  private String street;
+  private String city;
+  private String zip;
+  private String state;
+  private String country;
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  @CreationTimestamp
+  private Timestamp createdDate;
 
-	public String getNumber() {
-		return number;
-	}
+  @UpdateTimestamp
+  private Timestamp lastModifiedDate;
 
-	public void setNumber(String number) {
-		this.number = number;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public String getUnit() {
-		return unit;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	public void setUnit(String unit) {
-		this.unit = unit;
-	}
+  public String getNumber() {
+    return number;
+  }
 
-	public String getStreet() {
-		return street;
-	}
+  public void setNumber(String number) {
+    this.number = number.toUpperCase();
+  }
 
-	public void setStreet(String street) {
-		this.street = street;
-	}
+  public String getUnit() {
+    return unit;
+  }
 
-	public String getCity() {
-		return city;
-	}
+  public void setUnit(String unit) {
+    this.unit = unit.toUpperCase();
+  }
 
-	public void setCity(String city) {
-		this.city = city;
-	}
+  public String getStreet() {
+    return street;
+  }
 
-	public String getState() {
-		return state;
-	}
+  public void setStreet(String street) {
+    this.street = street.toUpperCase();
+  }
 
-	public void setState(String state) {
-		this.state = state;
-	}
+  public String getCity() {
+    return city;
+  }
 
-	public String getCountry() {
-		return country;
-	}
+  public void setCity(String city) {
+    this.city = city.toUpperCase();
+  }
 
-	public void setCountry(String country) {
-		this.country = country;
-	}
+  public String getState() {
+    return state;
+  }
+
+  public void setState(String state) {
+    this.state = state.toUpperCase();
+  }
+
+  public String getCountry() {
+    return country;
+  }
+
+  public void setCountry(String country) {
+    this.country = country.toUpperCase();
+  }
+
+  public String getZip() {
+    return zip;
+  }
+
+  public void setZip(String zip) {
+    this.zip = zip.replaceAll("\\s", "");
+  }
 }
