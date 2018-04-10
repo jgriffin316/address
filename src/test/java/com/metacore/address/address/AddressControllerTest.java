@@ -1,112 +1,85 @@
 package com.metacore.address.address;
 
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.documentationConfiguration;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.webAppContextSetup;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 
-import org.junit.Before;
-import org.junit.Ignore;
-import org.junit.Rule;
+import java.util.Optional;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.mockito.InjectMocks;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.JUnitRestDocumentation;
-import org.springframework.restdocs.mockmvc.RestDocumentationResultHandler;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.test.web.reactive.server.WebTestClient;
+import org.springframework.test.web.reactive.server.WebTestClient.RequestBodySpec;
+import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
+import org.springframework.web.reactive.function.BodyInserters;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.metacore.address.address.resource.AddressResourceRequest;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
-@ContextConfiguration
-@WebAppConfiguration
+@WebFluxTest(AddressController.class)
 public class AddressControllerTest {
 
-  MockMvc mockMvc;
-
-  @Rule
-  public final JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
-
-  private RestDocumentationResultHandler documentationHandler;
-
   @Autowired
-  private WebApplicationContext context;
+  WebTestClient client;
 
-  @Autowired
-  ObjectMapper objectMapper;
-
-  @InjectMocks
-  AddressController controller;
-
-  @Before
-  public void setup() {
-    setupDocumentationHandler();
-
-    this.mockMvc = webAppContextSetup(context).apply(documentationConfiguration(restDocumentation))
-        .alwaysDo(documentationHandler).build();
-  }
-
-  private void setupDocumentationHandler() {
-    documentationHandler = document("{method-name}", preprocessRequest(prettyPrint()),
-        preprocessResponse(prettyPrint()));
-  }
+  @MockBean
+  AddressService addressService;
 
   @Test
   public void create_noRequestBody_expectBadRequestError() throws Exception {
-    mockMvc.perform(post("/v1/address")).andExpect(status().isBadRequest());
+    post().exchange().expectStatus().isBadRequest();
   }
 
   @Test
   public void create_emptyRequestBody_expectBadRequestError() throws Exception {
-    postAddress(new AddressResourceRequest()).andExpect(status().isBadRequest());
+    post().body(BodyInserters.fromObject(new AddressResourceRequest())).exchange().expectStatus().isBadRequest();
   }
 
   @Test
   public void create_requestWithAllFields_expectOk() throws Exception {
     AddressResourceRequest request = createAddressResourceRequest();
+    Address expected = createAddress(request);
 
-    postAddress(request).andExpect(status().isOk()).andExpect(jsonPath("$.number").value(request.number.toUpperCase()))
-        .andExpect(jsonPath("$.unit").value(request.unit.toUpperCase()))
-        .andExpect(jsonPath("$.street").value(request.street.toUpperCase()))
-        .andExpect(jsonPath("$.city").value(request.city.toUpperCase()))
-        .andExpect(jsonPath("$.state").value(request.state.toUpperCase()))
-        .andExpect(jsonPath("$.zip").value(request.zip.toUpperCase().replace(" ", "")))
-        .andExpect(jsonPath("$.country").value(request.country.toUpperCase()));
+    when(addressService.create(any(Address.class))).thenReturn(expected);
+
+    assertResponseBody(expected, post().body(BodyInserters.fromObject(request)).exchange().expectStatus().isCreated()
+        .expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8).expectHeader().exists("location"));
+  }
+
+  private RequestBodySpec post() {
+    return client.post().uri("/v1/address").accept(MediaType.APPLICATION_JSON_UTF8);
   }
 
   @Test
   public void get_missingId_expect405() throws Exception {
-    mockMvc.perform(get("/v1/address")).andExpect(status().isMethodNotAllowed());
+    client.get().uri("/v1/address").accept(MediaType.APPLICATION_JSON_UTF8).exchange().expectStatus()
+        .isEqualTo(HttpStatus.METHOD_NOT_ALLOWED).expectBody().isEmpty();
   }
 
   @Test
   public void get_invalidId_expect404() throws Exception {
-    mockMvc.perform(get("/v1/address/badId")).andExpect(status().isNotFound());
+    client.get().uri("/v1/address/badId").accept(MediaType.APPLICATION_JSON_UTF8).exchange().expectStatus().isNotFound()
+        .expectBody().isEmpty();
   }
 
-  @Ignore
+  @Test
   public void get_requstWithAllFields_expectOk() throws Exception {
     AddressResourceRequest request = createAddressResourceRequest();
+    Address expected = createAddress(request);
 
-    ResultActions actions = postAddress(request).andExpect(status().isOk());
+    when(addressService.create(any(Address.class))).thenReturn(expected);
+    when(addressService.get(anyString())).thenReturn(Optional.of(expected));
 
+    post().body(BodyInserters.fromObject(request));
+
+    assertResponseBody(expected, client.get().uri("/v1/address/addressId").accept(MediaType.APPLICATION_JSON_UTF8)
+        .exchange().expectStatus().isOk().expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8));
   }
 
   private static AddressResourceRequest createAddressResourceRequest() {
@@ -121,20 +94,21 @@ public class AddressControllerTest {
     return request;
   }
 
+  private static Address createAddress(AddressResourceRequest resource) {
+    Address address = toDomainObject(resource);
+    address.setId("addressId");
+    return address;
+  }
+
   private static Address toDomainObject(AddressResourceRequest resource) {
     return AddressAssembler.toDomainObject(resource);
   }
 
-  private ResultActions postAddress(AddressResourceRequest request) throws Exception {
-    return mockMvc.perform(post("/v1/address").contentType(MediaType.APPLICATION_JSON).content(asJsonString(request)))
-        .andDo(print());
-  }
-
-  String asJsonString(final Object obj) {
-    try {
-      return objectMapper.writeValueAsString(obj);
-    } catch (Exception e) {
-      throw new RuntimeException(e);
-    }
+  private static void assertResponseBody(Address expected, ResponseSpec actual) {
+    actual.expectBody().jsonPath("$.id").isEqualTo(expected.getId()).jsonPath("$.number")
+        .isEqualTo(expected.getNumber()).jsonPath("$.unit").isEqualTo(expected.getUnit()).jsonPath("$.street")
+        .isEqualTo(expected.getStreet()).jsonPath("$.city").isEqualTo(expected.getCity()).jsonPath("$.state")
+        .isEqualTo(expected.getState()).jsonPath("$.zip").isEqualTo(expected.getZip()).jsonPath("$.country")
+        .isEqualTo(expected.getCountry());
   }
 }

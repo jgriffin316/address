@@ -1,15 +1,21 @@
 package com.metacore.address.address;
 
+import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.http.ResponseEntity.created;
+import static org.springframework.http.ResponseEntity.notFound;
+import static org.springframework.http.ResponseEntity.ok;
+
+import java.net.URI;
 import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-//import org.springframework.web.bind.annotation.GetMapping;
-//import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,12 +32,13 @@ public class AddressController {
   AddressService addressService;
 
   @PostMapping
-  public AddressResourceResponse create(@Valid @RequestBody AddressResourceRequest request) {
-    return toResponse(create(toAddress(request)));
+  public ResponseEntity<AddressResourceResponse> create(@Valid @RequestBody AddressResourceRequest request) {
+    AddressResourceResponse body = toResponse(create(toAddress(request)));
+    return created(createLocation(body.id)).contentType(MediaType.APPLICATION_JSON_UTF8).body(body);
   }
 
   @GetMapping("/{id}")
-  public AddressResourceResponse get(@NotBlank @PathVariable String id) {
+  public ResponseEntity<AddressResourceResponse> get(@NotBlank @PathVariable String id) {
     return toResponse(findById(id));
   }
 
@@ -48,21 +55,14 @@ public class AddressController {
   }
 
   private AddressResourceResponse toResponse(Address address) {
-    // URI location = URI.create(createLocation(address.getId()));
-    // ServerResponse.created(location).build();
-
     return AddressAssembler.toResponseObject(address);
   }
 
-  // private String createLocation(String id) {
-  // return linkTo(AddressController.class).slash(id).toString();
-  // }
+  private URI createLocation(String id) {
+    return URI.create(linkTo(AddressController.class).slash(id).toString());
+  }
 
-  private AddressResourceResponse toResponse(Optional<Address> address) {
-    if (address.isPresent()) {
-      return toResponse(address.get());
-    } else {
-      throw new NotFoundException();
-    }
+  private ResponseEntity<AddressResourceResponse> toResponse(Optional<Address> address) {
+    return address.isPresent() ? ok().body(toResponse(address.get())) : notFound().build();
   }
 }
