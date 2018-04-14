@@ -42,6 +42,14 @@ public class AddressControllerTest {
   }
 
   @Test
+  public void create_missingMandatoryFields_expectBadRequestError() {
+    AddressResourceRequest resource = createAddressResourceRequest();
+    resource.number = null;
+    post().body(BodyInserters.fromObject(resource)).exchange().expectStatus().isBadRequest().expectBody()
+        .jsonPath("$.errors").isArray();
+  }
+
+  @Test
   public void create_requestWithAllFields_expectOk() throws Exception {
     AddressResourceRequest request = createAddressResourceRequest();
     Address expected = createAddress(request);
@@ -80,6 +88,24 @@ public class AddressControllerTest {
 
     assertResponseBody(expected, client.get().uri("/v1/address/addressId").accept(MediaType.APPLICATION_JSON_UTF8)
         .exchange().expectStatus().isOk().expectHeader().contentType(MediaType.APPLICATION_JSON_UTF8));
+  }
+
+  @Test
+  public void delete_missingId_expect405() {
+    client.delete().uri("/v1/address").accept(MediaType.APPLICATION_JSON_UTF8).exchange().expectStatus()
+        .isEqualTo(HttpStatus.METHOD_NOT_ALLOWED).expectBody().isEmpty();
+  }
+
+  @Test
+  public void delete_badId_expect202() {
+    client.delete().uri("/v1/address/badId").accept(MediaType.APPLICATION_JSON_UTF8).exchange().expectStatus()
+        .isAccepted().expectBody().isEmpty();
+  }
+
+  @Test
+  public void delete_goodId_expect202() {
+    client.delete().uri("/v1/address/goodId").accept(MediaType.APPLICATION_JSON_UTF8).exchange().expectStatus()
+        .isAccepted().expectBody().isEmpty();
   }
 
   private static AddressResourceRequest createAddressResourceRequest() {

@@ -1,26 +1,36 @@
 package com.metacore.address.address;
 
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
+import static org.springframework.http.ResponseEntity.accepted;
+import static org.springframework.http.ResponseEntity.badRequest;
 import static org.springframework.http.ResponseEntity.created;
 import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.support.WebExchangeBindException;
 
+import com.metacore.address.address.resource.AddressResourceError;
 import com.metacore.address.address.resource.AddressResourceRequest;
 import com.metacore.address.address.resource.AddressResourceResponse;
 
@@ -33,8 +43,12 @@ public class AddressController {
 
   @PostMapping
   public ResponseEntity<AddressResourceResponse> create(@Valid @RequestBody AddressResourceRequest request) {
-    AddressResourceResponse body = toResponse(create(toAddress(request)));
-    return created(createLocation(body.id)).contentType(MediaType.APPLICATION_JSON_UTF8).body(body);
+    return sendCreatedResponse(toResponse(create(toAddress(request))));
+  }
+
+  @ExceptionHandler(WebExchangeBindException.class)
+  ResponseEntity<AddressResourceResponse> exceptionHandler(WebExchangeBindException ex) {
+    return sendErrorResponse(toAddressResourceErrorList(ex.getAllErrors()));
   }
 
   @GetMapping("/{id}")
@@ -42,27 +56,55 @@ public class AddressController {
     return toResponse(findById(id));
   }
 
-  private Address create(Address address) {
+  @DeleteMapping("/{id}")
+  public ResponseEntity<AddressResourceResponse> delete(@NotBlank @PathVariable String id) {
+    addressService.delete(id);
+    return accepted().build();
+  }
+
+  Address create(Address address) {
     return addressService.create(address);
   }
 
-  private Optional<Address> findById(String id) {
+  Optional<Address> findById(String id) {
     return addressService.get(id);
   }
 
-  private Address toAddress(AddressResourceRequest request) {
+  Address toAddress(AddressResourceRequest request) {
     return AddressAssembler.toDomainObject(request);
   }
 
-  private AddressResourceResponse toResponse(Address address) {
+  AddressResourceResponse toResponse(Address address) {
     return AddressAssembler.toResponseObject(address);
   }
 
-  private URI createLocation(String id) {
+  List<AddressResourceError> toAddressResourceErrorList(List<ObjectError> objectErrorList) {
+    List<AddressResourceError> errors = new ArrayList<>();
+    for (ObjectError error : objectErrorList) {
+      errors.add(createAddressResourceError((FieldError) error));
+    }
+    return errors;
+  }
+
+  AddressResourceError createAddressResourceError(FieldError error) {
+    return new AddressResourceError(error.getField(), error.getDefaultMessage());
+  }
+
+  ResponseEntity<AddressResourceResponse> sendErrorResponse(List<AddressResourceError> errors) {
+    AddressResourceResponse body = new AddressResourceResponse();
+    body.errors = errors;
+    return badRequest().contentType(APPLICATION_JSON_UTF8).body(body);
+  }
+
+  ResponseEntity<AddressResourceResponse> sendCreatedResponse(AddressResourceResponse body) {
+    return created(createLocation(body.id)).contentType(APPLICATION_JSON_UTF8).body(body);
+  }
+
+  URI createLocation(String id) {
     return URI.create(linkTo(AddressController.class).slash(id).toString());
   }
 
-  private ResponseEntity<AddressResourceResponse> toResponse(Optional<Address> address) {
+  ResponseEntity<AddressResourceResponse> toResponse(Optional<Address> address) {
     return address.isPresent() ? ok().body(toResponse(address.get())) : notFound().build();
   }
 }
