@@ -1,8 +1,8 @@
 package com.metacore.address.address;
 
 import java.util.Optional;
-import java.util.UUID;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,8 +12,12 @@ public class AddressService {
   AddressRepository addressRepository;
 
   public Address create(Address address) {
-    address.setId(UUID.randomUUID().toString());
+    address.setId(generateId(address));
     return addressRepository.save(address);
+  }
+
+  String generateId(Address address) {
+    return DigestUtils.shaHex(address.getSeedForSha1());
   }
 
   public Optional<Address> get(String id) {

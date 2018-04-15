@@ -43,7 +43,7 @@ public class Address {
   }
 
   public void setNumber(String number) {
-    this.number = number.toUpperCase();
+    this.number = cleanAndRemoveSpaces(number);
   }
 
   public String getUnit() {
@@ -51,7 +51,7 @@ public class Address {
   }
 
   public void setUnit(String unit) {
-    this.unit = unit.toUpperCase();
+    this.unit = cleanAndRemoveSpaces(unit);
   }
 
   public String getStreet() {
@@ -59,7 +59,7 @@ public class Address {
   }
 
   public void setStreet(String street) {
-    this.street = street.toUpperCase();
+    this.street = cleanAndRemoveSpaces(street);
   }
 
   public String getCity() {
@@ -67,7 +67,7 @@ public class Address {
   }
 
   public void setCity(String city) {
-    this.city = city.toUpperCase();
+    this.city = clean(city).replaceAll("\\s+", " ");
   }
 
   public String getState() {
@@ -75,7 +75,7 @@ public class Address {
   }
 
   public void setState(String state) {
-    this.state = state.toUpperCase();
+    this.state = cleanAndRemoveSpaces(state);
   }
 
   public String getCountry() {
@@ -83,7 +83,7 @@ public class Address {
   }
 
   public void setCountry(String country) {
-    this.country = country.toUpperCase();
+    this.country = cleanAndRemoveSpaces(country);
   }
 
   public String getZip() {
@@ -91,6 +91,18 @@ public class Address {
   }
 
   public void setZip(String zip) {
-    this.zip = zip.replaceAll("\\s", "");
+    this.zip = cleanAndRemoveSpaces(zip);
+  }
+
+  private String cleanAndRemoveSpaces(String s) {
+    return clean(s).replaceAll("\\s", "");
+  }
+
+  private String clean(String s) {
+    return s.trim().toUpperCase();
+  }
+
+  public String getSeedForSha1() {
+    return city + "|" + country + "|" + number + "|" + state + "|" + street + "|" + unit + "|" + zip;
   }
 }
