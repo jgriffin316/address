@@ -2,6 +2,7 @@ package com.metacore.address.address;
 
 import com.metacore.address.address.resource.AddressResourceRequest;
 import com.metacore.address.address.resource.AddressResourceResponse;
+import com.metacore.address.domain.Address;
 
 public class AddressAssembler {
 	static Address toDomainObject(AddressResourceRequest request) {

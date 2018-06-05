@@ -1,9 +1,11 @@
-package com.metacore.address.address;
+package com.metacore.address.domain;
 
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.metacore.address.domain.Address;
 
 public class AddressTest {
 

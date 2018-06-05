@@ -33,6 +33,7 @@ import org.springframework.web.bind.support.WebExchangeBindException;
 import com.metacore.address.address.resource.AddressResourceError;
 import com.metacore.address.address.resource.AddressResourceRequest;
 import com.metacore.address.address.resource.AddressResourceResponse;
+import com.metacore.address.domain.Address;
 
 @RestController
 @RequestMapping("/v1/address")

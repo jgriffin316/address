@@ -1,4 +1,4 @@
-package com.metacore.address.address;
+package com.metacore.address.domain;
 
 import java.sql.Timestamp;
 

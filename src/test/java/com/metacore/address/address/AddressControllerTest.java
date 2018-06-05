@@ -37,6 +37,7 @@ import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import org.springframework.web.reactive.function.BodyInserters;
 
 import com.metacore.address.address.resource.AddressResourceRequest;
+import com.metacore.address.domain.Address;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(AddressController.class)

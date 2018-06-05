@@ -6,6 +6,9 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.metacore.address.domain.Address;
+import com.metacore.address.domain.AddressRepository;
+
 @Component
 public class AddressService {
   @Autowired
