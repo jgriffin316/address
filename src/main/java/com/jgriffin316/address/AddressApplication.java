@@ -1,4 +1,4 @@
-package com.metacore.address;
+package com.jgriffin316.address;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

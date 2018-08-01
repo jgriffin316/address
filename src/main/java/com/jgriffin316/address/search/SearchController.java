@@ -1,4 +1,4 @@
-package com.metacore.address.search;
+package com.jgriffin316.address.search;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.metacore.address.address.AddressAssembler;
-import com.metacore.address.address.resource.AddressResourceError;
-import com.metacore.address.address.resource.AddressResourceResponse;
-import com.metacore.address.domain.Address;
+import com.jgriffin316.address.address.AddressAssembler;
+import com.jgriffin316.address.address.resource.AddressResourceError;
+import com.jgriffin316.address.address.resource.AddressResourceResponse;
+import com.jgriffin316.address.domain.Address;
 
 @RestController
 @RequestMapping("/v1/address")

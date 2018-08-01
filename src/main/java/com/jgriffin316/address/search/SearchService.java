@@ -1,4 +1,4 @@
-package com.metacore.address.search;
+package com.jgriffin316.address.search;
 
 import static java.util.stream.Collectors.toList;
 
@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Component;
 
-import com.metacore.address.domain.Address;
-import com.metacore.address.domain.AddressRepository;
+import com.jgriffin316.address.domain.Address;
+import com.jgriffin316.address.domain.AddressRepository;
 
 @Component
 public class SearchService {

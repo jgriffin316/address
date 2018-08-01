@@ -1,4 +1,4 @@
-package com.metacore.address.search;
+package com.jgriffin316.address.search;
 
 import static java.util.Arrays.asList;
 import static java.util.Map.entry;

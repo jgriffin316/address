@@ -1,4 +1,4 @@
-package com.metacore.address.address.resource;
+package com.jgriffin316.address.address.resource;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;

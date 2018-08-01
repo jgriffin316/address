@@ -1,4 +1,4 @@
-package com.metacore.address.address;
+package com.jgriffin316.address.address;
 
 import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
@@ -30,10 +30,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.support.WebExchangeBindException;
 
-import com.metacore.address.address.resource.AddressResourceError;
-import com.metacore.address.address.resource.AddressResourceRequest;
-import com.metacore.address.address.resource.AddressResourceResponse;
-import com.metacore.address.domain.Address;
+import com.jgriffin316.address.address.resource.AddressResourceError;
+import com.jgriffin316.address.address.resource.AddressResourceRequest;
+import com.jgriffin316.address.address.resource.AddressResourceResponse;
+import com.jgriffin316.address.domain.Address;
 
 @RestController
 @RequestMapping("/v1/address")

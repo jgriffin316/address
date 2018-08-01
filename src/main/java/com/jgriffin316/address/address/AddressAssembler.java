@@ -1,8 +1,8 @@
-package com.metacore.address.address;
+package com.jgriffin316.address.address;
 
-import com.metacore.address.address.resource.AddressResourceRequest;
-import com.metacore.address.address.resource.AddressResourceResponse;
-import com.metacore.address.domain.Address;
+import com.jgriffin316.address.address.resource.AddressResourceRequest;
+import com.jgriffin316.address.address.resource.AddressResourceResponse;
+import com.jgriffin316.address.domain.Address;
 
 public class AddressAssembler {
   static Address toDomainObject(AddressResourceRequest request) {

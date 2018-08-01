@@ -1,4 +1,4 @@
-package com.metacore.address.search;
+package com.jgriffin316.address.search;
 
 import static org.junit.Assert.assertEquals;
 
@@ -13,8 +13,11 @@ import org.mockito.InjectMocks;
 import org.mockito.Spy;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import com.metacore.address.domain.Address;
-import com.metacore.address.domain.AddressRepository;
+import com.jgriffin316.address.domain.Address;
+import com.jgriffin316.address.domain.AddressRepository;
+import com.jgriffin316.address.search.Operation;
+import com.jgriffin316.address.search.ParserOperator;
+import com.jgriffin316.address.search.SearchService;
 
 @RunWith(MockitoJUnitRunner.class)
 public class SearchServiceTest {

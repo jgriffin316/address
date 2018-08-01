@@ -1,4 +1,4 @@
-package com.metacore.address.search;
+package com.jgriffin316.address.search;
 
 public enum ParserOperator {
   /*

@@ -1,4 +1,4 @@
-package com.metacore.address.address.resource;
+package com.jgriffin316.address.address.resource;
 
 public class AddressResourceError {
   public String field;

@@ -1,4 +1,4 @@
-package com.metacore.address.domain;
+package com.jgriffin316.address.domain;
 
 import java.util.List;
 

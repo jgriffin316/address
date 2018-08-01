@@ -1,4 +1,4 @@
-package com.metacore.address;
+package com.jgriffin316.address;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

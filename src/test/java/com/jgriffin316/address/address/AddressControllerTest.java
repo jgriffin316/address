@@ -1,4 +1,4 @@
-package com.metacore.address.address;
+package com.jgriffin316.address.address;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -36,8 +36,11 @@ import org.springframework.test.web.reactive.server.WebTestClient.RequestBodySpe
 import org.springframework.test.web.reactive.server.WebTestClient.ResponseSpec;
 import org.springframework.web.reactive.function.BodyInserters;
 
-import com.metacore.address.address.resource.AddressResourceRequest;
-import com.metacore.address.domain.Address;
+import com.jgriffin316.address.address.AddressAssembler;
+import com.jgriffin316.address.address.AddressController;
+import com.jgriffin316.address.address.AddressService;
+import com.jgriffin316.address.address.resource.AddressResourceRequest;
+import com.jgriffin316.address.domain.Address;
 
 @RunWith(SpringRunner.class)
 @WebFluxTest(AddressController.class)

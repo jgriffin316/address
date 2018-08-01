@@ -1,4 +1,4 @@
-package com.metacore.address.search;
+package com.jgriffin316.address.search;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,10 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import com.jgriffin316.address.search.Operation;
+import com.jgriffin316.address.search.ParserOperator;
+import com.jgriffin316.address.search.SearchParser;
 
 public class SearchParserTest {
 
