@@ -1,5 +1,6 @@
 package com.metacore.address.address;
 
+import static java.util.stream.Collectors.toList;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8;
 import static org.springframework.http.ResponseEntity.accepted;
@@ -9,7 +10,6 @@ import static org.springframework.http.ResponseEntity.notFound;
 import static org.springframework.http.ResponseEntity.ok;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -79,12 +79,8 @@ public class AddressController {
     return AddressAssembler.toResponseObject(address);
   }
 
-  List<AddressResourceError> toAddressResourceErrorList(List<ObjectError> objectErrorList) {
-    List<AddressResourceError> errors = new ArrayList<>();
-    for (ObjectError error : objectErrorList) {
-      errors.add(createAddressResourceError((FieldError) error));
-    }
-    return errors;
+  List<AddressResourceError> toAddressResourceErrorList(List<ObjectError> errors) {
+    return errors.stream().map(it -> createAddressResourceError((FieldError) it)).collect(toList());
   }
 
   AddressResourceError createAddressResourceError(FieldError error) {

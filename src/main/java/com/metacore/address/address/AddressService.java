@@ -1,8 +1,9 @@
 package com.metacore.address.address;
 
+import static org.apache.commons.codec.digest.DigestUtils.shaHex;
+
 import java.util.Optional;
 
-import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +21,7 @@ public class AddressService {
   }
 
   String generateId(Address address) {
-    return DigestUtils.shaHex(address.getSeedForSha1());
+    return shaHex(address.getSeedForSha1());
   }
 
   public Optional<Address> get(String id) {

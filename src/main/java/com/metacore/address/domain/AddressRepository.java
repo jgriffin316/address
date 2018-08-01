@@ -1,7 +1,14 @@
 package com.metacore.address.domain;
 
+import java.util.List;
+
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface AddressRepository extends CrudRepository<Address, String> {
-
+@Repository
+public interface AddressRepository extends CrudRepository<Address, String>, JpaSpecificationExecutor<Address> {
+  @Override
+  List<Address> findAll(Specification<Address> spec);
 }

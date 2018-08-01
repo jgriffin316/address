@@ -45,12 +45,16 @@ public class SearchParserTest {
   }
 
   @Test
-  public void parse_criteriaWithSemicolon_expectException() throws ParseException {
-    parser.parse("a=5;");
+  public void parse_criteriaWithSemicolon_expectParseList() throws ParseException {
+    List<Operation> opList = parser.parse("a=5;");
+    assertEquals(1, opList.size());
+    assertEquals("a", opList.get(0).getProperty());
+    assertEquals(ParserOperator.EQ, opList.get(0).getOperator());
+    assertEquals("5", opList.get(0).getValueAt(0));
   }
 
   @Test
-  public void parse_validSimpleExpression_expectParsList() throws ParseException {
+  public void parse_validSimpleExpression_expectParseList() throws ParseException {
     List<Operation> opList = parser.parse("a=5");
     assertEquals(1, opList.size());
     assertEquals("a", opList.get(0).getProperty());
@@ -59,7 +63,7 @@ public class SearchParserTest {
   }
 
   @Test
-  public void parse_validLongExpression_expectParsList() throws ParseException {
+  public void parse_validLongExpression_expectParseList() throws ParseException {
     List<Operation> opList = parser.parse("aLongVariable23>=2018-10-22:08:00:32.000");
     assertEquals(1, opList.size());
     assertEquals("aLongVariable23", opList.get(0).getProperty());
@@ -68,7 +72,7 @@ public class SearchParserTest {
   }
 
   @Test
-  public void parse_validMultipleExpression_expectParsList() throws ParseException {
+  public void parse_validMultipleExpression_expectParseList() throws ParseException {
     List<Operation> opList = parser.parse("a=5;b<3");
     assertEquals(2, opList.size());
     assertEquals("a", opList.get(0).getProperty());
@@ -80,7 +84,7 @@ public class SearchParserTest {
   }
 
   @Test
-  public void parse_validComplexValue_expectParsList() throws ParseException {
+  public void parse_validComplexValue_expectParseList() throws ParseException {
     List<Operation> opList = parser.parse("a=5&\\t");
     assertEquals(1, opList.size());
     assertEquals("a", opList.get(0).getProperty());
@@ -89,7 +93,7 @@ public class SearchParserTest {
   }
 
   @Test
-  public void parse_validValueWithEscapeAtEnd_expectParsList() throws ParseException {
+  public void parse_validValueWithEscapeAtEnd_expectParseList() throws ParseException {
     List<Operation> opList = parser.parse("a=5&\\");
     assertEquals(1, opList.size());
     assertEquals("a", opList.get(0).getProperty());

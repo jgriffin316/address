@@ -36,4 +36,8 @@ public class Operation {
   public void addValue(String value) {
     this.value.add(value);
   }
+
+  public List<String> getValue() {
+    return value;
+  }
 }

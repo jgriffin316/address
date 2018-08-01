@@ -1,6 +1,8 @@
 package com.metacore.address.search;
 
+import static java.util.Arrays.asList;
 import static java.util.Map.entry;
+import static java.util.stream.Collectors.toList;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 
 import java.text.ParseException;
@@ -9,7 +11,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 public class SearchParser {
   private List<String> properties;
@@ -30,7 +31,7 @@ public class SearchParser {
   }
 
   public List<Operation> parse(String input) throws ParseException {
-    return Arrays.stream(input.split(lineSeparator)).map(it -> getOperation(it)).collect(Collectors.toList());
+    return Arrays.stream(input.split(lineSeparator)).map(it -> getOperation(it)).collect(toList());
   }
 
   private Operation getOperation(String input) throws RuntimeException {
@@ -40,8 +41,14 @@ public class SearchParser {
 
   private Matcher getMatcher(String input) {
     Matcher matcher = singleLinePattern.matcher(input);
-    matcher.find();
+    throwRuntimeExceptionIfMatchingFails(matcher.find(), input);
     return matcher;
+  }
+
+  private static void throwRuntimeExceptionIfMatchingFails(boolean hasPassed, String input) {
+    if (!hasPassed) {
+      throw new RuntimeException("Invalid search query: " + input);
+    }
   }
 
   private String getName(Matcher matcher) {
@@ -68,7 +75,7 @@ public class SearchParser {
   private List<String> getValue(Matcher matcher) {
     String[] valueArray = matcher.group(3).split(valueSeparator);
     throwExceptionIfValueMissing(valueArray);
-    return Arrays.asList(valueArray);
+    return asList(valueArray);
   }
 
   private void throwExceptionIfValueMissing(String[] valueArray) throws RuntimeException {
